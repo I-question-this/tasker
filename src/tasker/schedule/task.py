@@ -7,7 +7,8 @@ class Task:
             end: datetime.datetime) -> None:
         self.name = name
         if end < start:
-            raise ValueError("End can not be before start.")
+            raise ValueError(f"Task: {name} -- end ({end}) can not be "\
+                             f"before start ({start}).")
         self.start = start
         self.end = end
 

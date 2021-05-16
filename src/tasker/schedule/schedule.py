@@ -42,7 +42,7 @@ class Schedule:
                         end=self.day_end))
         else:
             # Add gap between day start and first task
-            if self.tasks[0].start != self.day_start:
+            if self.tasks[0].start < self.day_start:
                 task.append(Task("???", start=self.day_start, 
                             end=tasks[0].start))
             # First (and only?) task
@@ -63,7 +63,7 @@ class Schedule:
                     tasks.append(t)
 
             # Add gap between day end and last task
-            if self.tasks[-1].end != self.day_end:
+            if self.day_end > self.tasks[-1].end:
                 tasks.append(Task("???", start=self.tasks[-1].end,
                     end=self.day_end))
 
