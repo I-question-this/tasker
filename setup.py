@@ -16,7 +16,8 @@ setup(
     entry_points={
         'console_scripts': [
             'check_off_tasks = tasker.cli.check_off_tasks:cli_interface',
-            'reminder_tasks = tasker.cli.reminder_tasks:cli_interface'
+            'reminder_tasks = tasker.cli.reminder_tasks:cli_interface',
+            'todays_schedule = tasker.cli.todays_schedule:cli_interface'
         ]
     }
 )
