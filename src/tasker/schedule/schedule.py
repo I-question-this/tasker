@@ -38,13 +38,13 @@ class Schedule:
         tasks = []
 
         if len(self.tasks) == 0:
-            task.append(Task("???", start=self.day_start, 
+            tasks.append(Task("???", start=self.day_start, 
                         end=self.day_end))
         else:
             # Add gap between day start and first task
-            if self.tasks[0].start < self.day_start:
-                task.append(Task("???", start=self.day_start, 
-                            end=tasks[0].start))
+            if self.tasks[0].start > self.day_start:
+                tasks.append(Task("???", start=self.day_start, 
+                            end=self.tasks[0].start))
             # First (and only?) task
             tasks.append(self.tasks[0])
 
@@ -70,14 +70,51 @@ class Schedule:
         return tasks
 
     def __str__(self) -> str:
-        list_str = "\\begin{itemize}\n"
+        return self.as_formatted_list_string()
+
+    def as_latex_list(self, indent: int=0) -> str:
+        """Return the schedule as a LaTeX list.
+
+        Parameters
+        ----------
+        indent: int=0
+            The number of tabs to indent the LaTeX list by.
+
+        Returns
+        -------
+        str
+            The schedule as a LaTeX list
+        """
+        list_str = "\t" * indent + "\\begin{itemize}\n"
         for t in self.tasks_with_filled_gaps():
+            list_str += "\t" * indent
             list_str += f"\t\\item {t.start}--{t.end} \\(\\rightarrow\\) "\
                         f"{t.name}\n"
-        list_str += "\\end{itemize}"
+        list_str += "\t" * indent + "\\end{itemize}"
 
         return list_str
-        
+
+    def as_formatted_list_string(self) -> str:
+        """Return the schedule as a formatted list string.
+
+        Returns
+        -------
+        str
+            The schedule as a formatted list string.
+        """
+        task_strings = []
+
+        task_id = 0
+        for t in self.tasks_with_filled_gaps():
+            if t.name == "???":
+                task_strings.append(
+                        f"  : {t.start}--{t.end} -> {t.name}")
+            else:
+                task_strings.append(
+                        f"{task_id:2}: {t.start}--{t.end} -> {t.name}")
+                task_id += 1
+
+        return "\n".join(task_strings)
 
     def add_task(self, task: Task) -> None:
         bisect.insort(self.tasks, task)
