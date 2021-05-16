@@ -8,10 +8,10 @@ import sys
 from ..database import DATABASE, save_database
 
 
-def main(date: datetime.date) -> int:
-    """Print out today's proposed schedule based on the recurring tasks.
+def main(date: datetime.date) -> str:
+    """Return today's proposed schedule based on the recurring tasks.
     """
-    print(DATABASE.proposed_schedule(date))
+    return str(DATABASE.proposed_schedule(date))
 
 
 def parse_arguments(args=None) -> None:
@@ -36,7 +36,7 @@ def parse_arguments(args=None) -> None:
 def cli_interface() -> None:
     """Get program arguments from command line and run main"""
     args = parse_arguments()
-    main(**vars(args))
+    print(main(**vars(args)))
     sys.exit(0)
 
 
