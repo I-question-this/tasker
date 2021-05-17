@@ -2,6 +2,7 @@
 """Checks all tasks with given filters"""
 import argparse
 from dateutil.parser import isoparse
+import os
 import sys
 
 from ..util import complete_task, run_task_export, time_till_due   
