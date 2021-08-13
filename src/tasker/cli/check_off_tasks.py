@@ -17,12 +17,16 @@ def main(filters: list[str]) -> int:
     tasks = run_task_export(filters)
 
     # Sort by due date
-    tasks.sort(key=lambda t: t["due"])
+    tasks.sort(key=lambda t: t.get("due", ""))
 
     # Go through each task
     for t in tasks:
         print(f"{t['id']} -- \"{t['description']}\" -- ", end="")
-        print(f"Due: {time_till_due(isoparse(t['due']))}")
+        if t.get('due'):
+            due = time_till_due(isoparse(t['due']))
+        else:
+            due = "NO DUE DATE"
+        print(f"Due: {due}")
         done = input("Completed?: ").lower()[0]
         if done == "y":
             print(complete_task(t['id']), end="")

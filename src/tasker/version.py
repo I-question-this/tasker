@@ -1,9 +1,7 @@
 class Version:
     def __init__(self, major:int, minor:int, bug:int):
         """Object for version recording.
-        Uses the major.minor.bug notation.
-
-        Parameters
+        Uses the major.minor.bug notation.  Parameters
         ----------
         major: int
             The major number for the version number.
@@ -71,4 +69,4 @@ class Version:
 
 
 # The version
-__version__ = Version(0, 5, 1)
+__version__ = Version(0, 5, 2)
