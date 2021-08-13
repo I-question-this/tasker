@@ -27,9 +27,13 @@ def main(filters: list[str]) -> int:
         else:
             due = "NO DUE DATE"
         print(f"Due: {due}")
-        done = input("Completed?: ").lower()[0]
-        if done == "y":
-            print(complete_task(t['id']), end="")
+        is_done = None
+        while is_done is None:
+            is_done = input("Completed?: ").lower()
+            if len(is_done) == 0:
+                is_done = None
+            elif is_done == "y":
+                print(complete_task(t['id']), end="")
         print("-"*os.get_terminal_size().columns)
 
 
