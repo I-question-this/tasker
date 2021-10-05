@@ -108,10 +108,12 @@ class Schedule:
         for t in self.tasks_with_filled_gaps():
             if t.name == "???":
                 task_strings.append(
-                        f"  : {t.start}--{t.end} -> {t.name}")
+                        f"  : {t.start_formatted}--{t.end_formatted}"\
+                        f"-> {t.name}")
             else:
                 task_strings.append(
-                        f"{task_id:2}: {t.start}--{t.end} -> {t.name}")
+                        f"{task_id:2}: {t.start_formatted}--{t.end_formatted}"\
+                        f"-> {t.name}")
                 task_id += 1
 
         return "\n".join(task_strings)

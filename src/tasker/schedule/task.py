@@ -12,6 +12,18 @@ class Task:
         self.start = start
         self.end = end
 
+    @staticmethod
+    def hour_minute_formatted(dt: datetime.datetime) -> str:
+        return f"{dt.hour:02}:{dt.minute:02}"
+
+    @property
+    def start_formatted(self) -> str:
+        return self.hour_minute_formatted(self.start)
+
+    @property
+    def end_formatted(self) -> str:
+        return self.hour_minute_formatted(self.end)
+
     def to_dict(self) -> dict:
         """This class as a dictionary for JSON encoding"""
         return {'name': self.name,
