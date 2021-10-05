@@ -88,7 +88,8 @@ class Schedule:
         list_str = "\t" * indent + "\\begin{itemize}\n"
         for t in self.tasks_with_filled_gaps():
             list_str += "\t" * indent
-            list_str += f"\t\\item {t.start}--{t.end} \\(\\rightarrow\\) "\
+            list_str += f"\t\\item {t.start_formatted}--{t.end_formatted} "\
+                        f"\\(\\rightarrow\\) "\
                         f"{t.name}\n"
         list_str += "\t" * indent + "\\end{itemize}"
 
