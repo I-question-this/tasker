@@ -6,7 +6,7 @@ import os
 import sys
 
 from ..database import DATABASE, save_database
-from ..schedule import Schedule
+from ..schedule import Schedule, ScheduleFailure
 
 def main() -> Schedule:
     """Return today's proposed schedule based on the recurring tasks.
@@ -45,7 +45,12 @@ def parse_arguments(args=None) -> None:
 def cli_interface() -> None:
     """Get program arguments from command line and run main"""
     args = parse_arguments()
-    schedules = main(**vars(args))
+    try:
+        schedules = main(**vars(args))
+    except ScheduleFailure as exp:
+        print(exp)
+        sys.exit(-1)
+
     for d in sorted(schedules):
         print(f"{d.strftime('%A')}\n{schedules[d]}")
     sys.exit(0)

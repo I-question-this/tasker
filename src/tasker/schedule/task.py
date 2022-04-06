@@ -12,6 +12,10 @@ class Task:
         self.start = start
         self.end = end
 
+    def __str__(self):
+        return f"{self.start_formatted}--{self.end_formatted}"\
+                        f"-> {self.name}"
+
     @staticmethod
     def hour_minute_formatted(dt: datetime.datetime) -> str:
         return f"{dt.hour:02}:{dt.minute:02}"

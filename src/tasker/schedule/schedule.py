@@ -4,6 +4,21 @@ import datetime
 
 from .task import Task
 
+
+class ScheduleFailure(Exception):
+    def __init__(self, tasks, next_task, error_msg):
+        self._tasks = tasks
+        self._next_task = next_task
+        self._error_msg = error_msg
+
+    def __str__(self):
+        err_msg = "Successfully Added Tasks\n"
+        err_msg += "\n".join(str(t) for t in self._tasks)
+        err_msg += f"Next Task to Add:\n{self._next_task}\n"
+        err_msg += f"Error Message:\n{self._error_msg}"
+        return err_msg
+
+
 class Schedule:
     def __init__(self, day_start: datetime.time, day_end: datetime.time,
             tasks: list[Task]=[]) -> None:
@@ -37,37 +52,40 @@ class Schedule:
         """
         tasks = []
 
-        if len(self.tasks) == 0:
-            tasks.append(Task("???", start=self.day_start, 
-                        end=self.day_end))
-        else:
-            # Add gap between day start and first task
-            if self.tasks[0].start > self.day_start:
+        try:
+            if len(self.tasks) == 0:
                 tasks.append(Task("???", start=self.day_start, 
-                            end=self.tasks[0].start))
-            # First (and only?) task
-            tasks.append(self.tasks[0])
+                            end=self.day_end))
+            else:
+                # Add gap between day start and first task
+                if self.tasks[0].start > self.day_start:
+                    tasks.append(Task("???", start=self.day_start, 
+                                end=self.tasks[0].start))
+                # First (and only?) task
+                tasks.append(self.tasks[0])
 
-            # Remaining tasks
-            if len(self.tasks) > 1:
-                for i, t in enumerate(self.tasks):
-                    # Skip the first one, we already covered it
-                    if i == 0:
-                        continue
-                    # Determine if there's a gap
-                    previous_task = self.tasks[i-1]
-                    if previous_task.end != t.start:
-                        tasks.append(Task("???", start=previous_task.end, 
-                                          end=t.start))
-                    # This task
-                    tasks.append(t)
+                # Remaining tasks
+                if len(self.tasks) > 1:
+                    for i, t in enumerate(self.tasks):
+                        # Skip the first one, we already covered it
+                        if i == 0:
+                            continue
+                        # Determine if there's a gap
+                        previous_task = self.tasks[i-1]
+                        if previous_task.end != t.start:
+                            tasks.append(Task("???", start=previous_task.end, 
+                                              end=t.start))
+                        # This task
+                        tasks.append(t)
 
-            # Add gap between day end and last task
-            if self.day_end > self.tasks[-1].end:
-                tasks.append(Task("???", start=self.tasks[-1].end,
-                    end=self.day_end))
+                # Add gap between day end and last task
+                if self.day_end > self.tasks[-1].end:
+                    tasks.append(Task("???", start=self.tasks[-1].end,
+                        end=self.day_end))
 
-        return tasks
+            return tasks
+        except ValueError as exp:
+            raise ScheduleFailure(tasks, t, str(exp))
 
     def __str__(self) -> str:
         return self.as_formatted_list_string()
@@ -109,12 +127,10 @@ class Schedule:
         for t in self.tasks_with_filled_gaps():
             if t.name == "???":
                 task_strings.append(
-                        f"  : {t.start_formatted}--{t.end_formatted}"\
-                        f"-> {t.name}")
+                        f"  : {t}")
             else:
                 task_strings.append(
-                        f"{task_id:2}: {t.start_formatted}--{t.end_formatted}"\
-                        f"-> {t.name}")
+                        f"{task_id:2}: {t}")
                 task_id += 1
 
         return "\n".join(task_strings)
